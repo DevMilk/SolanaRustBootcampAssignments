@@ -1,0 +1,1 @@
+c:\Users\ugurk\Desktop\SolanaRustBootcamp\Assignments\rust_blockchain\target\debug\rust_blockchain.exe: c:\Users\ugurk\Desktop\SolanaRustBootcamp\Assignments\rust_blockchain\src\lib.rs c:\Users\ugurk\Desktop\SolanaRustBootcamp\Assignments\rust_blockchain\src\main.rs
