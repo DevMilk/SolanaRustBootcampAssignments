@@ -1,16 +1,11 @@
-use blockchainlib::*;
-
 //!!!Algorithm of this project is not the safest and efficient way. It is just for training purposes to understand how blockchain works.  
+
+use blockchainlib::*;
 fn main(){
     let difficulty = 0x000fffffffffffffffffffffffffffff;
     let mut genesis = Block::new(0,now(),vec![0; 32], vec![
         Transaction {
-            inputs: vec![
-                transaction::Output{
-                    to_addr: "Alice".to_owned(),
-                    amount: 50,
-                }
-            ],
+            inputs: vec![],
             outputs: vec![
                 transaction::Output{
                     to_addr: "Alice".to_owned(),
