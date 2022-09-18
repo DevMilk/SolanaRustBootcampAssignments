@@ -48,6 +48,7 @@ impl Block {
     }
 
     pub fn mine(&mut self){
+        //Find such a nonce value that block's hash starts with n 0s (n=difficulity)
         while self.nonce <=u64::max_value() && check_difficulty(&self.hash(), self.difficulty) == false {
             self.nonce += 1;
         }
