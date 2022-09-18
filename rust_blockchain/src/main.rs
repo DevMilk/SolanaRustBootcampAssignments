@@ -1,33 +1,40 @@
 use blockchainlib::*;
 
+//!!!Algorithm of this project is not the safest and efficient way. It is just for training purposes to understand how blockchain works.  
 fn main(){
     let difficulty = 0x000fffffffffffffffffffffffffffff;
-    let mut block = Block::new(0,now(),vec![0; 32], 0, "Genesis block".to_owned(), difficulty);
+    let mut genesis = Block::new(0,now(),vec![0; 32], vec![
+        Transaction {
+            inputs: vec![
+                transaction::Output{
+                    to_addr: "Alice".to_owned(),
+                    amount: 50,
+                }
+            ],
+            outputs: vec![
+                transaction::Output{
+                    to_addr: "Alice".to_owned(),
+                    amount: 50,
+                },
+                transaction::Output{
+                    to_addr: "Bob".to_owned(),
+                    amount: 7,
+                }
+            ]
+        }
+    ], difficulty);
 
-    block.hash = block.hash();
+    genesis.hash = genesis.hash();
     
-    println!("{:?}", &block);
+    println!("{:?}", &genesis);
 
-    block.mine();
-    println!("{:?}", &block);
+    genesis.mine();
+    println!("{:?}", &genesis);
 
-    let mut prev_hash = block.hash().clone();
-    let mut blockchain = Blockchain {
-        blocks: vec![block]
-    };
+    let mut prev_hash = genesis.hash().clone();
 
-    for i in 1..=10 {
-        let mut block = Block::new(i,now(),prev_hash, 0, "Genesis block".to_owned(), difficulty);
-        
-        block.mine();
-        println!("{:?}", &block);
-        prev_hash = block.hash.clone();
-        blockchain.blocks.push(block);
-    }
+    let mut blockchain = Blockchain::new();
 
-    println!("{}", &blockchain.verify());
-
-    blockchain.blocks[1].hash[3] += 1;
-    println!("{}", &blockchain.verify());
+    blockchain.update_with_block(genesis).expect("Failed to add genesis block");
 
 }

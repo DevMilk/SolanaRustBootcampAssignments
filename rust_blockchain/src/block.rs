@@ -5,10 +5,10 @@ use super::*; //import all modules on same folder
 pub struct Block{
     pub index: u32, 
     pub timestamp: u128,
-    pub hash: Hash,
+    pub hash: Hash, // Hash = Vec<u8> defined on lib.rs
     pub prev_block_hash: Hash,
     pub nonce: u64,
-    pub payload: String,
+    pub transactions: Vec<Transaction>,
     pub difficulty: u128
 }
 
@@ -19,7 +19,7 @@ impl Debug for Block{
             &self.index, 
             &hex::encode(&self.hash), 
             &self.timestamp, 
-            &self.payload,
+            &self.transactions.len(),
             &self.nonce)
     }
 }
@@ -30,10 +30,8 @@ impl Block {
     pub fn new (
         index: u32, 
         timestamp: u128,
-       // hash: BlockHash,
         prev_block_hash: Hash,
-        nonce: u64,
-        payload: String,
+        transactions: Vec<Transaction>,
         difficulty: u128
     ) -> Self {
         return Block{
@@ -41,8 +39,8 @@ impl Block {
             timestamp,
             hash: vec![0; 32],
             prev_block_hash,
-            nonce,
-            payload,
+            nonce: 0,
+            transactions,
             difficulty
         }
     }
@@ -58,13 +56,18 @@ impl Block {
 
 //Implementation with hashable trait
 impl Hashable for Block {
-    fn bytes(&self) -> Vec<u8> {
+    fn bytes(&self) -> Hash {
         let mut bytes = vec![];
         bytes.extend(&u32_bytes(&self.index));
         bytes.extend(&u128_bytes(&self.timestamp));
         bytes.extend(&self.prev_block_hash);
         bytes.extend(&u64_bytes(&self.nonce));
-        bytes.extend(self.payload.as_bytes());
+        bytes.extend(
+            self.transactions
+                .iter()
+                .flat_map(|x| x.bytes())
+                .collect::<Vec<u8>>()
+        );
         bytes.extend(&u128_bytes(&self.difficulty));
         return bytes;
     }
